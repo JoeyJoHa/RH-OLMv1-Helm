@@ -293,20 +293,6 @@ helm install my-operator . -f values.yaml --debug --dry-run
 - **[OLMv1 Case Study](https://github.com/yourusername/OLMv1-CaseStudy)**: Examples and documentation for OLMv1 deployments
 - **[OLMv1 RBAC Manager](https://github.com/yourusername/OLMv1-RBAC-Manager)**: Tool for extracting and managing operator RBAC permissions
 
-## Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-[Specify your license here]
-
 ## Support
 
 For issues and questions:
@@ -315,9 +301,3 @@ For issues and questions:
 - Check the [OLMv1 documentation upstream](https://github.com/operator-framework/operator-controller)
 - Check the [OLMv1 documentation downstream](https://github.com/openshift/operator-framework-operator-controller)
 - Review the examples in the [Case Study repository](https://github.com/yourusername/OLMv1-CaseStudy)
-
-## Acknowledgments
-
-- OpenShift Operator Framework team for OLMv1
-- Kubernetes community for operator patterns
-- Contributors to this project
