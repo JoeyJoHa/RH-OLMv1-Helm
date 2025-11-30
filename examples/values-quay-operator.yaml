@@ -1,0 +1,134 @@
+# Quay Operator specific values for the generic operator-olm-v1 Helm chart
+# This file demonstrates how to configure the generic chart for a specific operator
+
+# Operator Configuration
+operator:
+  # Name of the operator and ClusterExtension
+  name: "quay-operator"  # Custom name
+  # Create the operator (create ClusterExtension resource)
+  create: true
+  # Specific version of Quay operator
+  appVersion: "3.10.13"
+  # Quay operator channel
+  channel: "stable-3.10"
+  # Quay operator package name in the catalog
+  packageName: "quay-operator"
+
+# Service Account Configuration
+serviceAccount:
+  create: true
+  name: ""
+  bind: true
+  annotations: {}
+  labels: {}
+
+# Permissions Configuration
+# All RBAC resources are defined here. Binding names are auto-generated
+# based on role names with appropriate suffixes.
+permissions:
+  # Cluster-level permissions
+  # Binding names auto-generated with "-cluster-binding" suffix
+  clusterRoles:
+    - name: ""  # Empty = auto-generate: <release>-<chart>-installer
+      type: "operator"  # Type: "operator" for operator permissions, "grantor" for RBAC permissions
+      create: true
+      customRules:    
+        # For clusters that use OwnerReferencesPermissionEnforcement, the installer service account must be able to update finalizers on the ClusterExtension
+        - apiGroups: [olm.operatorframework.io]
+          resources: [clusterextensions/finalizers]
+          verbs: [update]
+          resourceNames: [quay-operator]
+        # Manage Quay CRDs
+        - apiGroups: [apiextensions.k8s.io]
+          resources: [customresourcedefinitions]
+          verbs: [create, list, watch]
+        - apiGroups: [apiextensions.k8s.io]
+          resources: [customresourcedefinitions]
+          verbs: [get, update, patch, delete]
+          # Scoped to the Quay CRDs in the bundle
+          resourceNames: [quayregistries.quay.redhat.com]
+        # ClusterRoles and ClusterRoleBindings
+        - apiGroups: [rbac.authorization.k8s.io]
+          resources: [clusterroles]
+          verbs: [create, list, watch]
+        - apiGroups: [rbac.authorization.k8s.io]
+          resources: [clusterroles]
+          verbs: [get, update, patch, delete]
+        #  resourceNames: [<controller cluster role name 1>] # After the operator is installed, the controller cluster role name will be available. (oc get clusterrole | grep quay)
+        - apiGroups: [rbac.authorization.k8s.io]
+          resources: [clusterrolebindings]
+          verbs: [create, list, watch]
+        - apiGroups: [rbac.authorization.k8s.io]
+          resources: [clusterrolebindings]
+          verbs: [get, update, patch, delete]
+        #  resourceNames: [<controller cluster rolebinding name 1>] # After the operator is installed, the controller cluster role binding name will be available. (oc get clusterrolebinding | grep quay)
+    
+    - name: ""  # Empty = auto-generate: <release>-<chart>-installer-grantor
+      type: "grantor"  # Type: "grantor" for RBAC permissions
+      create: true
+      customRules:    
+        - apiGroups: ["quay.redhat.com"]
+          resources: ["quayregistries", "quayregistries/status"]
+          verbs: ["*"]
+        - apiGroups: ["apps"]
+          resources: ["deployments"]
+          verbs: ["*"]
+        - apiGroups: [""]
+          resources: ["pods", "services", "secrets", "serviceaccounts", "configmaps", "persistentvolumeclaims", "events"]
+          verbs: ["*"]
+        - apiGroups: [""]
+          resources: ["namespaces"]
+          verbs: ["get", "watch", "list", "update", "patch"]
+        - apiGroups: ["rbac.authorization.k8s.io"]
+          resources: ["roles", "rolebindings"]
+          verbs: ["*"]
+        - apiGroups: ["route.openshift.io"]
+          resources: ["routes", "routes/custom-host"]
+          verbs: ["*"]
+        - apiGroups: ["autoscaling"]
+          resources: ["horizontalpodautoscalers"]
+          verbs: ["*"]
+        - apiGroups: ["objectbucket.io"]
+          resources: ["objectbucketclaims"]
+          verbs: ["*"]
+        - apiGroups: ["monitoring.coreos.com"]
+          resources: ["prometheusrules", "servicemonitors"]
+          verbs: ["*"]
+        - apiGroups: ["batch"]
+          resources: ["jobs"]
+          verbs: ["*"]
+  
+  # Namespace-level permissions
+  # Binding names auto-generated with "-namespace-binding" suffix
+  roles:
+    - name: ""  # Empty = auto-generate: <release>-<chart>-installer
+      type: "operator"  # Type: "operator" for operator permissions, "grantor" for RBAC permissions
+      create: false  # No namespace-level roles needed for Quay operator
+      customRules:
+        - apiGroups: [""]
+          resources: ["pods", "services", "configmaps", "secrets"]
+          verbs: ["*"]
+
+# Additional Resources Configuration
+# List of additional Kubernetes resources to create alongside the operator
+additionalResources: []
+# Example usage:
+# additionalResources:
+#   - apiVersion: v1
+#     kind: ConfigMap
+#     metadata:
+#       name: quay-operator-config
+#       namespace: {{ .Release.Namespace }}
+#     data:
+#       config.yaml: |
+#         quay:
+#           features:
+#             FEATURE_USER_INITIALIZE: true
+#   - apiVersion: v1
+#     kind: Secret
+#     metadata:
+#       name: quay-operator-secret
+#       namespace: {{ .Release.Namespace }}
+#     type: Opaque
+#     data:
+#       database-password: cXVheS1kYi1wYXNzd29yZA==  # base64: quay-db-password

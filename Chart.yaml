@@ -1,0 +1,14 @@
+apiVersion: v2
+name: operator-olmv1
+description: A generic Helm chart for deploying operators using OLMv1 via ClusterExtension
+type: application
+version: 0.3.0
+keywords:
+  - operator
+  - olm
+  - v1
+  - kubernetes
+  - helm
+home: https://github.com/JoeyJoHa/OLMv1
+sources:
+  - https://github.com/JoeyJoHa/OLMv1
