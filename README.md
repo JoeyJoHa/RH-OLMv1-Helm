@@ -290,8 +290,8 @@ helm install my-operator . -f values.yaml --debug --dry-run
 
 ## Related Projects
 
-- **[OLMv1 Case Study](https://github.com/yourusername/OLMv1-CaseStudy)**: Examples and documentation for OLMv1 deployments
-- **[OLMv1 RBAC Manager](https://github.com/yourusername/OLMv1-RBAC-Manager)**: Tool for extracting and managing operator RBAC permissions
+- **[OLMv1 Case Study](https://github.com/JoeyJoHa/RH-OLMv1-CaseStudy)**: Examples and documentation for OLMv1 deployments
+- **[OLMv1 RBAC Manager](https://github.com/JoeyJoHa/RH-OLMv1-RBAC-Manager)**: Tool for extracting and managing operator RBAC permissions
 
 ## Support
 
